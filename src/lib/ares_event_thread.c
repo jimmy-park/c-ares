@@ -127,10 +127,15 @@ ares_status_t ares_event_update(ares_event_t **event, ares_event_thread_t *e,
       return ARES_ENOMEM;
     }
 
+    ares__thread_mutex_lock(e->mutex);
+
     if (ares__llist_insert_last(e->ev_updates, ev) == NULL) {
       ares_free(ev);
+      ares__thread_mutex_unlock(e->mutex);
       return ARES_ENOMEM;
     }
+
+    ares__thread_mutex_unlock(e->mutex);
   }
 
   ev->flags = flags;

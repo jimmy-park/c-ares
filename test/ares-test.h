@@ -234,9 +234,9 @@ public:
 
   // Set the reply to be sent next; the query ID field will be overwritten
   // with the value from the request.
-  void SetReplyData(const std::vector<byte> &reply)
+  void SetReplyData(std::vector<byte> reply)
   {
-    reply_ = reply;
+    reply_ = std::move(reply);
   }
 
   void SetReply(const DNSPacket *reply)

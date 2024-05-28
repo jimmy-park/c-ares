@@ -77,9 +77,7 @@ struct DNSQuestion {
   {
   }
 
-  virtual ~DNSQuestion()
-  {
-  }
+  virtual ~DNSQuestion() = default;
 
   virtual std::vector<byte> data() const;
   std::string               name_;
@@ -98,12 +96,8 @@ struct DNSRR : public DNSQuestion {
   {
   }
 
-  virtual ~DNSRR()
-  {
-  }
-
-  virtual std::vector<byte> data() const = 0;
-  int                       ttl_;
+  std::vector<byte> data() const override;
+  int               ttl_;
 };
 
 struct DNSAddressRR : public DNSRR {
@@ -119,8 +113,8 @@ struct DNSAddressRR : public DNSRR {
   {
   }
 
-  virtual std::vector<byte> data() const;
-  std::vector<byte>         addr_;
+  std::vector<byte> data() const override;
+  std::vector<byte> addr_;
 };
 
 struct DNSARR : public DNSAddressRR {
@@ -154,8 +148,10 @@ struct DNSSingleNameRR : public DNSRR {
   {
   }
 
-  virtual std::vector<byte> data() const;
-  std::string               other_;
+  std::vector<byte> data() const override;
+
+protected:
+  std::string other_;
 };
 
 struct DNSCnameRR : public DNSSingleNameRR {
@@ -186,8 +182,8 @@ struct DNSTxtRR : public DNSRR {
   {
   }
 
-  virtual std::vector<byte> data() const;
-  std::vector<std::string>  txt_;
+  std::vector<byte>        data() const override;
+  std::vector<std::string> txt_;
 };
 
 struct DNSMxRR : public DNSRR {
@@ -196,9 +192,9 @@ struct DNSMxRR : public DNSRR {
   {
   }
 
-  virtual std::vector<byte> data() const;
-  int                       pref_;
-  std::string               other_;
+  std::vector<byte> data() const override;
+  int               pref_;
+  std::string       other_;
 };
 
 struct DNSSrvRR : public DNSRR {
@@ -209,11 +205,11 @@ struct DNSSrvRR : public DNSRR {
   {
   }
 
-  virtual std::vector<byte> data() const;
-  int                       prio_;
-  int                       weight_;
-  int                       port_;
-  std::string               target_;
+  std::vector<byte> data() const override;
+  int               prio_;
+  int               weight_;
+  int               port_;
+  std::string       target_;
 };
 
 struct DNSUriRR : public DNSRR {
@@ -223,10 +219,10 @@ struct DNSUriRR : public DNSRR {
   {
   }
 
-  virtual std::vector<byte> data() const;
-  int                       prio_;
-  int                       weight_;
-  std::string               target_;
+  std::vector<byte> data() const override;
+  int               prio_;
+  int               weight_;
+  std::string       target_;
 };
 
 struct DNSSoaRR : public DNSRR {
@@ -238,14 +234,14 @@ struct DNSSoaRR : public DNSRR {
   {
   }
 
-  virtual std::vector<byte> data() const;
-  std::string               nsname_;
-  std::string               rname_;
-  int                       serial_;
-  int                       refresh_;
-  int                       retry_;
-  int                       expire_;
-  int                       minimum_;
+  std::vector<byte> data() const override;
+  std::string       nsname_;
+  std::string       rname_;
+  int               serial_;
+  int               refresh_;
+  int               retry_;
+  int               expire_;
+  int               minimum_;
 };
 
 struct DNSNaptrRR : public DNSRR {
@@ -257,13 +253,13 @@ struct DNSNaptrRR : public DNSRR {
   {
   }
 
-  virtual std::vector<byte> data() const;
-  int                       order_;
-  int                       pref_;
-  std::string               flags_;
-  std::string               service_;
-  std::string               regexp_;
-  std::string               replacement_;
+  std::vector<byte> data() const override;
+  int               order_;
+  int               pref_;
+  std::string       flags_;
+  std::string       service_;
+  std::string       regexp_;
+  std::string       replacement_;
 };
 
 struct DNSOption {
@@ -277,8 +273,8 @@ struct DNSOptRR : public DNSRR {
   {
   }
 
-  virtual std::vector<byte> data() const;
-  std::vector<DNSOption>    opts_;
+  std::vector<byte>      data() const override;
+  std::vector<DNSOption> opts_;
 };
 
 struct DNSPacket {

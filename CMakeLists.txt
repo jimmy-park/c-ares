@@ -62,9 +62,11 @@ IF ((CARES_BUILD_TESTS OR CARES_BUILD_CONTAINER_TESTS) AND (NOT CARES_STATIC) AN
 ENDIF ()
 
 INCLUDE (EnableWarnings)
+INCLUDE (UseSanitizer)
 
 IF (MSVC)
 	# allow linking against the static runtime library in msvc
+    add_compile_options(/MP)
 	OPTION (CARES_MSVC_STATIC_RUNTIME "Link against the static runtime library" OFF)
 	IF (CARES_MSVC_STATIC_RUNTIME)
 		# CMAKE_CONFIGURATION_TYPES is empty on non-IDE generators (Ninja, NMake)

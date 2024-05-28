@@ -7,7 +7,20 @@ IF (MSVC)
 ENDIF ()
 
 find_package(Threads)
-find_package(GTest REQUIRED)
+find_package(GTest)
+
+if(NOT GTest_FOUND)
+    include(FetchContent)
+
+    set(INSTALL_GTEST OFF)
+    set(gtest_force_shared_crt ON)
+
+    FetchContent_Declare(
+        gtest
+        URL https://github.com/google/googletest/archive/main.tar.gz
+    )
+    FetchContent_MakeAvailable(gtest)
+endif()
 
 IF (NOT TARGET GTest::gmock)
   Message(FATAL_ERROR "GoogleTest found but the GMock component was not found")
@@ -77,3 +90,11 @@ add_test(
   WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/fuzznames"
   COMMAND $<TARGET_FILE:aresfuzzname> ${FUZZNAMES_FILES}
 )
+
+if(MSVC)
+    cmake_path(GET CMAKE_CXX_COMPILER PARENT_PATH VS_PATH)
+    set_tests_properties(arestest aresfuzz aresfuzzname
+        PROPERTIES
+        ENVIRONMENT "PATH=${VS_PATH}\;%PATH%;ASAN_SYMBOLIZER_PATH=${VS_PATH}"
+    )
+endif()
